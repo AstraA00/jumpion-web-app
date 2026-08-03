@@ -12,9 +12,11 @@ import { TrickListPage } from './pages/TrickListPage'
 import { TrickDetailPage } from './pages/TrickDetailPage'
 import { CompoundPage } from './pages/CompoundPage'
 
+const basename = import.meta.env.BASE_URL.replace(/\/$/, '')
+
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename || undefined}>
       <Routes>
         <Route element={<AppShell />}>
           <Route index element={<ProfilePage />} />
