@@ -1,10 +1,31 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru" data-theme="light">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>web-jumpion</title>
+    <link rel="icon" type="image/png" href="/jumpion-logo.png" />
+    <link rel="apple-touch-icon" href="/jumpion-logo.png" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#f4f7fc" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <title>Jumpion</title>
+    <script>
+      (function () {
+        try {
+          var theme = localStorage.getItem('jumpion-theme')
+          if (theme !== 'light' && theme !== 'dark') theme = 'light'
+          document.documentElement.dataset.theme = theme
+          document.documentElement.style.colorScheme = theme
+          var meta = document.querySelector('meta[name="theme-color"]')
+          if (meta) {
+            meta.setAttribute('content', theme === 'dark' ? '#0b1220' : '#f4f7fc')
+          }
+        } catch (e) {}
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>
