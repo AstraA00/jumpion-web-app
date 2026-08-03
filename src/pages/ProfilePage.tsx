@@ -1,3 +1,4 @@
+import { asset } from '../lib/asset'
 import { useProfileStats } from '../lib/useProgress'
 
 export function ProfilePage() {
@@ -10,7 +11,7 @@ export function ProfilePage() {
       <div className="profile-logo-wrap">
         <img
           className="profile-logo"
-          src="/jumpion-logo.png"
+          src={asset('jumpion-logo.png')}
           alt="Jumpion"
           width={180}
           height={180}
