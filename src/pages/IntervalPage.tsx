@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { BackLink } from '../components/BackLink'
-import { getAudioContext, playBeep, playTick } from '../lib/audio'
+import { playBeep, playTick, unlockAudio } from '../lib/audio'
 import { formatMmSs, pad2 } from '../lib/formatTime'
 import { recordActivity } from '../lib/streak'
 
@@ -120,8 +120,9 @@ export function IntervalPage() {
     setSettings((prev) => ({ ...prev, ...partial }))
   }
 
-  function start() {
-    getAudioContext()
+  async function start() {
+    // Unlock Web Audio inside the tap — required on iOS Safari.
+    await unlockAudio()
     recordActivity()
     lastTickSec.current = null
     setRun({
@@ -175,9 +176,10 @@ export function IntervalPage() {
             <button
               type="button"
               className="primary-btn"
-              onClick={() =>
+              onClick={() => {
+                void unlockAudio()
                 setRun((r) => (r ? { ...r, paused: !r.paused } : r))
-              }
+              }}
             >
               {run.paused ? 'Продолжить' : 'Пауза'}
             </button>
@@ -266,7 +268,7 @@ export function IntervalPage() {
         </div>
       </div>
 
-      <button type="button" className="primary-btn" onClick={start}>
+      <button type="button" className="primary-btn" onClick={() => void start()}>
         Старт
       </button>
     </div>

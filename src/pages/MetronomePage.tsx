@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { BackLink } from '../components/BackLink'
-import { getAudioContext, playClick } from '../lib/audio'
+import { playClick, unlockAudio } from '../lib/audio'
 import { formatElapsed } from '../lib/formatTime'
 import { recordActivity } from '../lib/streak'
 
@@ -31,9 +31,9 @@ export function MetronomePage() {
       return
     }
 
-    getAudioContext()
     const intervalMs = 60000 / tempo
-    nextTickRef.current = performance.now()
+    // First click already played in the Start tap handler (iOS unlock).
+    nextTickRef.current = performance.now() + intervalMs
     startedAt.current = Date.now()
 
     const tick = () => {
@@ -47,8 +47,6 @@ export function MetronomePage() {
       }
     }
 
-    playClick()
-    nextTickRef.current = performance.now() + intervalMs
     timerRef.current = window.setInterval(tick, 25)
 
     return () => {
@@ -61,12 +59,18 @@ export function MetronomePage() {
     setTempo(Math.min(MAX, Math.max(MIN, Math.round(next))))
   }
 
-  function toggle() {
-    if (!running) {
-      recordActivity()
-      setElapsed(0)
+  async function toggle() {
+    if (running) {
+      setRunning(false)
+      return
     }
-    setRunning((v) => !v)
+
+    // Unlock + first click must happen inside the user gesture on iOS.
+    await unlockAudio()
+    playClick()
+    recordActivity()
+    setElapsed(0)
+    setRunning(true)
   }
 
   return (
@@ -115,7 +119,7 @@ export function MetronomePage() {
         </button>
       </div>
 
-      <button type="button" className="primary-btn" onClick={toggle}>
+      <button type="button" className="primary-btn" onClick={() => void toggle()}>
         {running ? 'Стоп' : 'Старт'}
       </button>
     </div>
