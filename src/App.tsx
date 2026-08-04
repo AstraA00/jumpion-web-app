@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AppShell } from './components/AppShell'
+import { MetrikaHit } from './components/MetrikaHit'
 import { ProfilePage } from './pages/ProfilePage'
 import { TricksPage } from './pages/TricksPage'
 import { ToolsPage } from './pages/ToolsPage'
@@ -17,6 +18,7 @@ const basename = import.meta.env.BASE_URL.replace(/\/$/, '')
 export default function App() {
   return (
     <BrowserRouter basename={basename || undefined}>
+      <MetrikaHit />
       <Routes>
         <Route element={<AppShell />}>
           <Route index element={<ProfilePage />} />
